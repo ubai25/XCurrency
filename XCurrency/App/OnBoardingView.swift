@@ -26,5 +26,10 @@ struct OnBoardingView: View {
 struct OnBoardingView_Previews: PreviewProvider {
     static var previews: some View {
         OnBoardingView()
+            .previewDevice(PreviewDevice(rawValue: "iPhone 12"))
+                        .previewDisplayName("iPhone 12")
+        
+        OnBoardingView()
     }
 }
+

@@ -7,17 +7,22 @@
 
 import SwiftUI
 import ChameleonFramework
+import SwiftyJSON
 
 struct ContentView: View {
     
-    @State private var result: Int = 80000000
+    @AppStorage("convertFrom") var convertFrom: String = "USD"
+    @AppStorage("convertTo") var convertTo: String = "IDR"
+    
+    @State private var result: String = "0.00"
     @State private var from: String = "0"
+    @State private var showingAlert: Bool = false
+    @State var alertTitle: String = "Something is Wrong"
+    @State var alertMessage: String = "Something is Wrong"
+    
     var multiplyWith: Int = 25
-    @State private var convertFrom: String = "IDR"
-    @State private var convertTo: String = "USD"
     var colors: [[Color]] = colorsAvailableArray.shuffled()
-//    @State private var isEditings: Bool = false
-//    @State private var showDetails = false
+    var images = currencyImages.shuffled()
     
     var body: some View {
         ZStack{
@@ -30,100 +35,109 @@ struct ContentView: View {
                         }
                         Spacer()
                         
-                        Image(currencyImages.shuffled()[0])
+                        Image(images[0])
                             .resizable()
-                            .frame(width: 120, height: 120)
+                            .frame(width: UIScreen.screenHeight/8, height: UIScreen.screenHeight/8)
                             .shadow(color: Color(red: 0, green: 0, blue: 0, opacity: 0.15), radius: 8, x: 6, y: 8)
                         
                     }
                 }
-                .frame(height: 180)
-                .padding(30)
+                .frame(height: UIScreen.screenHeight/5)
+                .padding(UIScreen.screenWidth/14)
                 .background(LinearGradient(gradient: Gradient(colors: colors[0]), startPoint: .topLeading, endPoint: .bottomTrailing))
-                .clipShape(CustomShape(corner: .bottomRight, radii: 50))
-                .edgesIgnoringSafeArea(.top)
+                .clipShape(CustomShape(corner: .bottomRight, radii: 40))
+                .offset(y: -UIScreen.screenHeight/18)
                 
-//                Spacer()
-                Text("\(result)")
+                
+
+                Text(result)
                     .padding(.all)
-                    .frame(maxWidth: .infinity, minHeight: 80.0, alignment: .center)
+                    .frame(maxWidth: .infinity, minHeight: UIScreen.screenHeight/10, alignment: .center)
                     .background(Color.white)
                     .cornerRadius(30)
-                    .padding(.horizontal, 40)
-                    .offset(y: -90)
+                    .padding(.horizontal, UIScreen.screenWidth/10)
+                    .offset(y: -UIScreen.screenHeight/11)
                     .shadow(color: Color(red: 0, green: 0, blue: 0, opacity: 0.15), radius: 8, x: 6, y: 8)
                     .font(.title)
                 
                 Spacer()
                 
                 VStack {
-                    Button(action: {
-                        //action
-                    }, label: {
-                        Text("IDR")
-                            .font(/*@START_MENU_TOKEN@*/.title/*@END_MENU_TOKEN@*/)
-                            .fontWeight(.bold)
-                            .foregroundColor(colors[0][1])
-                    })
+                    Picker("\(self.convertTo)", selection: $convertTo) {
+                        ForEach(currenciesIso, id: \.self) {
+                            Text($0)
+                        }
+                    }
+                    .pickerStyle(MenuPickerStyle())
                     .padding(.all)
-                    .frame(minWidth: 120)
+                    .frame(minWidth: UIScreen.screenWidth/3)
                     .background(Color.white)
                     .cornerRadius(/*@START_MENU_TOKEN@*/20.0/*@END_MENU_TOKEN@*/)
                     .shadow(color: Color(red: 0, green: 0, blue: 0, opacity: 0.15), radius: 6, x: 2, y: 3)
-                    
-                    Button(action: {
-                        //action
-                    }, label: {
-                        Image(systemName: "repeat.circle.fill")
-                            .resizable()
-                            .frame(width: 60, height: 60)
-                            .foregroundColor(colors[0][1])
-                            .opacity(/*@START_MENU_TOKEN@*/0.8/*@END_MENU_TOKEN@*/)
-                    })
-                    .padding()
-                    
-                    Button(action: {
-                        //action
-                    }, label: {
-                        Text("USD")
-                            .font(/*@START_MENU_TOKEN@*/.title/*@END_MENU_TOKEN@*/)
-                            .fontWeight(.bold)
-                            .foregroundColor(colors[0][1])
-                    })
-                    .padding(.all)
-                    .frame(minWidth: 120)
-                    .background(Color.white)
-                    .cornerRadius(/*@START_MENU_TOKEN@*/20.0/*@END_MENU_TOKEN@*/)
-                    .shadow(color: Color(red: 0, green: 0, blue: 0, opacity: 0.15), radius: 6, x: 2, y: 3)
-                }
-                .offset(y: -45)
-                
-                Spacer()
-                
-                VStack{
-                    TextField(
-                            "User name (email address)",
-                        text: $from
-                        )
-                    .padding(.all)
-                    .frame(maxWidth: .infinity, minHeight: 80.0, alignment: .center)
-                    .background(Color.white)
-                    .cornerRadius(30)
-                    .padding(.horizontal, 40)
-                    .shadow(color: Color(red: 0, green: 0, blue: 0, opacity: 0.15), radius: 8, x: 6, y: 8)
+                    .foregroundColor(colors[0][1])
                     .font(.title)
                     
                     Button(action: {
-                        guard let intFrom = Int(self.from) else {
-                            return
+                        let temp = convertFrom
+                        self.convertFrom = self.convertTo
+                        self.convertTo = temp
+                    }, label: {
+                        Image(systemName: "repeat.circle.fill")
+                            .resizable()
+                            .frame(width: UIScreen.screenHeight/15, height: UIScreen.screenHeight/15)
+                            .foregroundColor(colors[0][1])
+                            .opacity(/*@START_MENU_TOKEN@*/0.8/*@END_MENU_TOKEN@*/)
+                    })
+                    .padding(UIScreen.screenWidth/30)
+                    
+                    Picker("\(self.convertFrom)", selection: $convertFrom) {
+                        ForEach(currenciesIso, id: \.self) {
+                            Text($0)
+                        }
+                    }
+                    .pickerStyle(MenuPickerStyle())
+                    .padding(.all)
+                    .frame(minWidth: UIScreen.screenWidth/3)
+                    .background(Color.white)
+                    .cornerRadius(/*@START_MENU_TOKEN@*/20.0/*@END_MENU_TOKEN@*/)
+                    .shadow(color: Color(red: 0, green: 0, blue: 0, opacity: 0.15), radius: 6, x: 2, y: 3)
+                    .foregroundColor(colors[0][1])
+                    .font(.title)
+                }
+                .offset(y: -UIScreen.screenHeight/18)
+                
+                VStack{
+                    TextField("Amount", text: $from)
+                    .padding(.all)
+                    .frame(maxWidth: .infinity, minHeight: UIScreen.screenHeight/10.0, alignment: .center)
+                    .background(RoundedRectangle(cornerRadius: 30)
+                                    .strokeBorder(colors[0][0], lineWidth: 0.3))
+                    .background(Color.white)
+                    .cornerRadius(30)
+                    .shadow(color: Color(red: 0, green: 0, blue: 0, opacity: 0.15), radius: 8, x: 6, y: 8)
+                    .padding(.horizontal, UIScreen.screenWidth/10)
+                    .padding(.vertical, UIScreen.screenHeight/50)
+                    .font(.title)
+                    .keyboardType(.numberPad)
+                    
+                    
+                    Button(action: {
+                        if let valid = Int(from) {
+                            if valid <= 0 {
+                                alertTitle = "Invalid Request"
+                                alertMessage = "Amount cannot less than 1"
+                                showingAlert = true
+                            }
+                        } else {
+                            alertTitle = "Invalid Request"
+                            alertMessage = "Invalid Amount"
+                            showingAlert = true
                         }
                         
-                        self.result = calculate(intFrom, multiplyWith)
-    //                    Api().getPosts()
+                        getPosts()
                     },  label: {
                         Text("Convert")
                             .font(/*@START_MENU_TOKEN@*/.title/*@END_MENU_TOKEN@*/)
-                            .fontWeight(.bold)
                             .foregroundColor(Color(UIColor(contrastingBlackOrWhiteColorOn:UIColor(colors[0][1]), isFlat:true)))
                     })
                     .padding(.all)
@@ -131,18 +145,40 @@ struct ContentView: View {
                     .background(colors[0][1])
                     .cornerRadius(/*@START_MENU_TOKEN@*/20.0/*@END_MENU_TOKEN@*/)
                     .shadow(color: Color(red: 0, green: 0, blue: 0, opacity: 0.15), radius: 6, x: 3, y: 4)
-                    
-//                    Spacer()
+                    .alert(isPresented: $showingAlert) {
+                        Alert(title: Text(alertTitle), message: Text(alertMessage), dismissButton: .default(Text("Ok")))
+                            }
                 }
+                .offset(y: -UIScreen.screenHeight/25)
                 
             }
-//            .background(LinearGradient(gradient: Gradient(colors: [Color.white,colors[0][0]]), startPoint: .center, endPoint: .bottom))
-//            .edgesIgnoringSafeArea(.bottom)
         }
-    }
+    } // END OF VIEW
     
-    func calculate(_ valFrom: Int, _ valMultiplyWith: Int) -> Int {
-        valFrom * valMultiplyWith
+    // MARK: FUNCS
+    
+    func getPosts() {
+        
+        guard let url = URL(string: "https://api.exchangerate.host/latest?base=\(convertFrom)&amount=\(from)&symbols=\(convertTo)&places=2") else { return}
+        
+        print(url)
+        
+        URLSession.shared.dataTask(with: url) { (data, _, _) in
+            
+            let weatherJSON : JSON = JSON(data as Any)
+            
+            let convertResult: Double = Double("\(weatherJSON["rates"][convertTo])") ?? -10.00
+            
+            if convertResult != -10.00 {
+                self.result = "\(weatherJSON["rates"][convertTo])"
+            }else{
+                self.result = "0.00"
+                showingAlert = true
+            }
+            
+            print(self.result)
+            
+        }.resume()
     }
 }
 
@@ -161,5 +197,19 @@ struct CustomShape : Shape {
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
+        
+//        ContentView()
+//            .previewDevice(PreviewDevice(rawValue: "iPhone 12"))
+//                        .previewDisplayName("iPhone 12")
+//
+//        ContentView()
+//            .previewDevice(PreviewDevice(rawValue: "iPhone 8"))
+//                        .previewDisplayName("iPhone 8")
     }
+}
+
+extension UIScreen{
+   static let screenWidth = UIScreen.main.bounds.size.width
+   static let screenHeight = UIScreen.main.bounds.size.height
+   static let screenSize = UIScreen.main.bounds.size
 }
