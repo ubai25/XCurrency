@@ -10,6 +10,7 @@ import ChameleonFramework
 
 struct CurrencyPickerView: View {
     @Environment(\.presentationMode) var presentationMode
+    @EnvironmentObject var globalVar: GlobalVar
     
     @AppStorage("convertFrom") var convertFrom: String?
     @AppStorage("convertTo") var convertTo: String?
@@ -17,10 +18,8 @@ struct CurrencyPickerView: View {
     @State private var selectedCurrency: [String] = currencies[0]
     @State private var search: String = ""
     @State private var iSearch: Bool = false
-//    @State private var filteredCurrencies = currencies
     
     var color: Color
-    var state: String
     
     var body: some View {
         NavigationView(){
@@ -29,20 +28,18 @@ struct CurrencyPickerView: View {
                     
                     Divider().padding(.vertical, 4)
                     
-                    HStack{
-                        TextField("Search", text: $search)
-                            .padding()
-                            .font(.title)
-                            .frame(width: UIScreen.screenWidth/1.2, height: UIScreen.screenHeight/18)
-                            .background(Color.white)
-                            .foregroundColor(color)
-                            .cornerRadius(10)
-                            .isHidden(false)
-//                            .padding(.horizontal, 10)
-                    }
+//                    TextField("Search", text: $search)
+//                        .padding()
+//                        .font(.title)
+//                        .frame(width: UIScreen.screenWidth/1.2, height: UIScreen.screenHeight/18)
+//                        .background(Color.white)
+//                        .foregroundColor(color)
+//                        .cornerRadius(10)
+//                        .isHidden(false)
+//                        .disabled(/*@START_MENU_TOKEN@*/true/*@END_MENU_TOKEN@*/)
                     
                     Text(selectedCurrency[0])
-                        .font(.title)
+                        .font(.title2)
                         .fontWeight(.light)
                         .frame(width: UIScreen.screenWidth/1.2, height: UIScreen.screenHeight/18)
                         .background(Color.white)
@@ -51,7 +48,7 @@ struct CurrencyPickerView: View {
                         .isHidden(false)
                     
                     Picker("Select your Currency", selection: $selectedCurrency) {
-                        ForEach(getCurrencies(state: state), id: \.self) {
+                        ForEach(getCurrencies(), id: \.self) {
                             Text($0[1])
                         }
                     }
@@ -62,7 +59,7 @@ struct CurrencyPickerView: View {
                         
                         Button(action: {
                             
-                            if(state == "to"){
+                            if(!globalVar.currencyFrom){
                                 convertTo = selectedCurrency[1]
                             }else{
                                 convertFrom = selectedCurrency[1]
@@ -78,8 +75,6 @@ struct CurrencyPickerView: View {
                                 .foregroundColor(Color(UIColor(contrastingBlackOrWhiteColorOn:UIColor(color), isFlat:true)))
                         })
                         .frame(minWidth: UIScreen.screenWidth/2.5)
-    //                    .background(RoundedRectangle(cornerRadius: 20)
-    //                                    .strokeBorder(Color.gray, lineWidth: 0.3))
                         .background(color)
                         .cornerRadius(20)
                         .padding()
@@ -101,13 +96,19 @@ struct CurrencyPickerView: View {
         }
     }
     
-    func getCurrencies(state: String) -> [[String]]{
+    func getCurrencies() -> [[String]]{
+        
         if(search.isEmpty || search == ""){
             return currencies
         }else {
             let tempCurr = currencies.filter{
                 $0[0].uppercased().contains(search.uppercased()) || $0[1].contains(search.uppercased())
             }
+            
+            if(tempCurr.count<1){
+                return [["Result Not Found", ""]]
+            }
+            
             selectedCurrency = tempCurr[0]
             return tempCurr
         }
@@ -143,6 +144,6 @@ extension View {
 
 struct CurrencyPickerView_Previews: PreviewProvider {
     static var previews: some View {
-        CurrencyPickerView(color: Color(UIColor.flatPlum()), state: "to")
+        CurrencyPickerView(color: Color(UIColor.flatPlum()))
     }
 }

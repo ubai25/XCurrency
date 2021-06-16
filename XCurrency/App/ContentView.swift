@@ -10,6 +10,7 @@ import ChameleonFramework
 import SwiftyJSON
 
 struct ContentView: View {
+    @EnvironmentObject var globalVar: GlobalVar
     
     @AppStorage("convertFrom") var convertFrom: String = "USD"
     @AppStorage("convertTo") var convertTo: String = "IDR"
@@ -21,7 +22,6 @@ struct ContentView: View {
     @State var alertTitle: String = "Something is Wrong"
     @State var alertMessage: String = "Something is Wrong"
     
-    var multiplyWith: Int = 25
     var colors: [[Color]] = colorsAvailableArray.shuffled()
     var images = currencyImages.shuffled()
     
@@ -42,14 +42,13 @@ struct ContentView: View {
                             .shadow(color: Color(red: 0, green: 0, blue: 0, opacity: 0.15), radius: 8, x: 6, y: 8)
                         
                     }
+                    .offset(y: UIScreen.screenHeight/50)
                 }
                 .frame(height: UIScreen.screenHeight/5)
                 .padding(UIScreen.screenWidth/14)
                 .background(LinearGradient(gradient: Gradient(colors: colors[0]), startPoint: .topLeading, endPoint: .bottomTrailing))
                 .clipShape(CustomShape(corner: .bottomRight, radii: 40))
-                .offset(y: -UIScreen.screenHeight/18)
-                
-                
+                .offset(y: -UIScreen.screenHeight/17)
 
                 Text(result)
                     .padding(.all)
@@ -65,6 +64,7 @@ struct ContentView: View {
                 
                 VStack {
                     Button(action: {
+                        globalVar.currencyFrom = false
                         showingPicker = true
                     }, label: {
                         Text(convertTo)
@@ -77,9 +77,6 @@ struct ContentView: View {
                     .shadow(color: Color(red: 0, green: 0, blue: 0, opacity: 0.15), radius: 6, x: 2, y: 3)
                     .foregroundColor(colors[0][1])
                     .font(.title)
-                    .sheet(isPresented: $showingPicker){
-                        CurrencyPickerView(color: colors[0][1], state: "to")
-                    }
                     
                     Button(action: {
                         let temp = convertFrom
@@ -95,6 +92,7 @@ struct ContentView: View {
                     .padding(UIScreen.screenWidth/30)
                     
                     Button(action: {
+                        globalVar.currencyFrom = true
                         showingPicker = true
                     }, label: {
                         Text(convertFrom)
@@ -107,9 +105,6 @@ struct ContentView: View {
                     .shadow(color: Color(red: 0, green: 0, blue: 0, opacity: 0.15), radius: 6, x: 2, y: 3)
                     .foregroundColor(colors[0][1])
                     .font(.title)
-                    .sheet(isPresented: $showingPicker){
-                        CurrencyPickerView(color: colors[0][1], state: "from")
-                    }
                 }
                 .offset(y: -UIScreen.screenHeight/18)
                 
@@ -156,9 +151,11 @@ struct ContentView: View {
                         Alert(title: Text(alertTitle), message: Text(alertMessage), dismissButton: .default(Text("Ok")))
                             }
                 }
-                .offset(y: -UIScreen.screenHeight/25)
-                
-            }
+                .offset(y: -UIScreen.screenHeight/25
+            )}
+        }
+        .sheet(isPresented: $showingPicker){
+            CurrencyPickerView(color: colors[0][1])
         }
     } // END OF VIEW
     
@@ -208,7 +205,7 @@ struct ContentView_Previews: PreviewProvider {
 //        ContentView()
 //            .previewDevice(PreviewDevice(rawValue: "iPhone 12"))
 //                        .previewDisplayName("iPhone 12")
-//
+////
 //        ContentView()
 //            .previewDevice(PreviewDevice(rawValue: "iPhone 8"))
 //                        .previewDisplayName("iPhone 8")
@@ -219,4 +216,9 @@ extension UIScreen{
    static let screenWidth = UIScreen.main.bounds.size.width
    static let screenHeight = UIScreen.main.bounds.size.height
    static let screenSize = UIScreen.main.bounds.size
+}
+
+class GlobalVar: ObservableObject{
+    @Published var currencyFrom: Bool = true
+    @Published var searchCurrency: String = ""
 }
