@@ -108,6 +108,7 @@
 			children = (
 				6A2F7DF426726B50006F8856 /* XCurrencyApp.swift */,
 				6A2F7DF626726B50006F8856 /* ContentView.swift */,
+				6A1476E02677965600D12BFE /* CurrencyPickerView.swift */,
 				6A81781E26727A94000EF520 /* OnBoardingView.swift */,
 			);
 			path = App;
@@ -116,7 +117,6 @@
 		6A81781726726E79000EF520 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				6A1476E02677965600D12BFE /* CurrencyPickerView.swift */,
 				6A81781A26726F84000EF520 /* StartButtonView.swift */,
 				6A81781C26727008000EF520 /* WelcomingCardView.swift */,
 			);

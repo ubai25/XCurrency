@@ -17,6 +17,7 @@ struct ContentView: View {
     @State private var result: String = "0.00"
     @State private var from: String = "0"
     @State private var showingAlert: Bool = false
+    @State private var showingPicker: Bool = false
     @State var alertTitle: String = "Something is Wrong"
     @State var alertMessage: String = "Something is Wrong"
     
@@ -63,11 +64,11 @@ struct ContentView: View {
                 Spacer()
                 
                 VStack {
-                    Picker("\(self.convertTo)", selection: $convertTo) {
-                        ForEach(currenciesIso, id: \.self) {
-                            Text($0)
-                        }
-                    }
+                    Button(action: {
+                        showingPicker = true
+                    }, label: {
+                        Text(convertTo)
+                    })
                     .pickerStyle(MenuPickerStyle())
                     .padding(.all)
                     .frame(minWidth: UIScreen.screenWidth/3)
@@ -76,6 +77,9 @@ struct ContentView: View {
                     .shadow(color: Color(red: 0, green: 0, blue: 0, opacity: 0.15), radius: 6, x: 2, y: 3)
                     .foregroundColor(colors[0][1])
                     .font(.title)
+                    .sheet(isPresented: $showingPicker){
+                        CurrencyPickerView(color: colors[0][1], state: "to")
+                    }
                     
                     Button(action: {
                         let temp = convertFrom
@@ -90,11 +94,11 @@ struct ContentView: View {
                     })
                     .padding(UIScreen.screenWidth/30)
                     
-                    Picker("\(self.convertFrom)", selection: $convertFrom) {
-                        ForEach(currenciesIso, id: \.self) {
-                            Text($0)
-                        }
-                    }
+                    Button(action: {
+                        showingPicker = true
+                    }, label: {
+                        Text(convertFrom)
+                    })
                     .pickerStyle(MenuPickerStyle())
                     .padding(.all)
                     .frame(minWidth: UIScreen.screenWidth/3)
@@ -103,6 +107,9 @@ struct ContentView: View {
                     .shadow(color: Color(red: 0, green: 0, blue: 0, opacity: 0.15), radius: 6, x: 2, y: 3)
                     .foregroundColor(colors[0][1])
                     .font(.title)
+                    .sheet(isPresented: $showingPicker){
+                        CurrencyPickerView(color: colors[0][1], state: "from")
+                    }
                 }
                 .offset(y: -UIScreen.screenHeight/18)
                 
@@ -127,14 +134,14 @@ struct ContentView: View {
                                 alertTitle = "Invalid Request"
                                 alertMessage = "Amount cannot less than 1"
                                 showingAlert = true
+                            }else{
+                                getPosts()
                             }
                         } else {
                             alertTitle = "Invalid Request"
                             alertMessage = "Invalid Amount"
                             showingAlert = true
                         }
-                        
-                        getPosts()
                     },  label: {
                         Text("Convert")
                             .font(/*@START_MENU_TOKEN@*/.title/*@END_MENU_TOKEN@*/)
