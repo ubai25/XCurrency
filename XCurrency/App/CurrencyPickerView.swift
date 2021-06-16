@@ -15,7 +15,7 @@ struct CurrencyPickerView: View {
     @AppStorage("convertFrom") var convertFrom: String?
     @AppStorage("convertTo") var convertTo: String?
     
-    @State private var selectedCurrency: [String] = currencies[0]
+//    @State private var selectedCurrency: [String] = currencies[0]
     @State private var search: String = ""
     @State private var iSearch: Bool = false
     
@@ -28,17 +28,7 @@ struct CurrencyPickerView: View {
                     
                     Divider().padding(.vertical, 4)
                     
-//                    TextField("Search", text: $search)
-//                        .padding()
-//                        .font(.title)
-//                        .frame(width: UIScreen.screenWidth/1.2, height: UIScreen.screenHeight/18)
-//                        .background(Color.white)
-//                        .foregroundColor(color)
-//                        .cornerRadius(10)
-//                        .isHidden(false)
-//                        .disabled(/*@START_MENU_TOKEN@*/true/*@END_MENU_TOKEN@*/)
-                    
-                    Text(selectedCurrency[0])
+                    Text(globalVar.selectedCurrency[0])
                         .font(.title2)
                         .fontWeight(.light)
                         .frame(width: UIScreen.screenWidth/1.2, height: UIScreen.screenHeight/18)
@@ -47,7 +37,7 @@ struct CurrencyPickerView: View {
                         .cornerRadius(10)
                         .isHidden(false)
                     
-                    Picker("Select your Currency", selection: $selectedCurrency) {
+                    Picker("Select your Currency", selection: $globalVar.selectedCurrency) {
                         ForEach(getCurrencies(), id: \.self) {
                             Text($0[1])
                         }
@@ -60,9 +50,9 @@ struct CurrencyPickerView: View {
                         Button(action: {
                             
                             if(!globalVar.currencyFrom){
-                                convertTo = selectedCurrency[1]
+                                convertTo = globalVar.selectedCurrency[1]
                             }else{
-                                convertFrom = selectedCurrency[1]
+                                convertFrom = globalVar.selectedCurrency[1]
                             }
                             
                             presentationMode.wrappedValue.dismiss()
@@ -109,7 +99,7 @@ struct CurrencyPickerView: View {
                 return [["Result Not Found", ""]]
             }
             
-            selectedCurrency = tempCurr[0]
+            globalVar.selectedCurrency = tempCurr[0]
             return tempCurr
         }
     }

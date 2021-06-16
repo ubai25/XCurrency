@@ -221,4 +221,5 @@ extension UIScreen{
 class GlobalVar: ObservableObject{
     @Published var currencyFrom: Bool = true
     @Published var searchCurrency: String = ""
+    @Published var selectedCurrency: [String] = currencies[0]
 }
