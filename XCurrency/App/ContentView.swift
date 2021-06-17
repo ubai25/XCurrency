@@ -25,6 +25,8 @@ struct ContentView: View {
     @State var colors: [[Color]] = colorsAvailableArray.shuffled()
     @State var images = currencyImages.shuffled()
     
+    var test = "aha"
+    
     var body: some View {
         ZStack{
             VStack(){
@@ -74,7 +76,7 @@ struct ContentView: View {
                         globalVar.isCurrencyFrom = false
                         showingPicker = true
                     }, label: {
-                        Text(globalVar.selectedTo[1])
+                        Text(convertTo)
                     })
                     .pickerStyle(MenuPickerStyle())
                     .padding(.all)
@@ -89,6 +91,11 @@ struct ContentView: View {
                         let temp = convertFrom
                         self.convertFrom = self.convertTo
                         self.convertTo = temp
+                        
+                        let tempArr = globalVar.selectedTo
+                        globalVar.selectedTo = globalVar.selectedFrom
+                        globalVar.selectedFrom = tempArr
+                        
                     }, label: {
                         Image(systemName: "repeat.circle.fill")
                             .resizable()
@@ -103,7 +110,7 @@ struct ContentView: View {
                         globalVar.isCurrencyTo = false
                         showingPicker = true
                     }, label: {
-                        Text(globalVar.selectedFrom[1])
+                        Text(convertFrom)
                     })
                     .pickerStyle(MenuPickerStyle())
                     .padding(.all)
@@ -211,14 +218,6 @@ struct CustomShape : Shape {
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
-        
-//        ContentView()
-//            .previewDevice(PreviewDevice(rawValue: "iPhone 12"))
-//                        .previewDisplayName("iPhone 12")
-////
-//        ContentView()
-//            .previewDevice(PreviewDevice(rawValue: "iPhone 8"))
-//                        .previewDisplayName("iPhone 8")
     }
 }
 
@@ -232,6 +231,6 @@ class GlobalVar: ObservableObject{
     @Published var isCurrencyFrom: Bool = false
     @Published var isCurrencyTo: Bool = true
     @Published var searchCurrency: String = ""
-    @Published var selectedFrom: [String] = currencies[0]
-    @Published var selectedTo: [String] = currencies[0]
+    @Published var selectedFrom: [String] = currencies[149]
+    @Published var selectedTo: [String] = currencies[62]
 }

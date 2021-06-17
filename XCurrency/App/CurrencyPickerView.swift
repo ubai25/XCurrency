@@ -33,7 +33,7 @@ struct CurrencyPickerView: View {
                             Text(globalVar.selectedTo[0])
                                 .font(.title2)
                                 .fontWeight(.light)
-                                .frame(width: UIScreen.screenWidth/1.2, height: UIScreen.screenHeight/18)
+                                .frame(maxWidth: UIScreen.screenWidth/1.2, minHeight: UIScreen.screenHeight/18)
                                 .background(Color.white)
                                 .foregroundColor(color)
                                 .cornerRadius(10)
@@ -53,7 +53,7 @@ struct CurrencyPickerView: View {
                             Text(globalVar.selectedFrom[0])
                                 .font(.title2)
                                 .fontWeight(.light)
-                                .frame(width: UIScreen.screenWidth/1.2, height: UIScreen.screenHeight/18)
+                                .frame(maxWidth: UIScreen.screenWidth/1.2, minHeight: UIScreen.screenHeight/18)
                                 .background(Color.white)
                                 .foregroundColor(color)
                                 .cornerRadius(10)
@@ -74,17 +74,11 @@ struct CurrencyPickerView: View {
                         Button(action: {
                             
                             if(globalVar.isCurrencyTo){
-                                print("isCurrencyTo")
                                 convertTo = globalVar.selectedTo[1]
-                                print(convertTo)
-                                print(globalVar.selectedTo[1])
                             }
                             
                             if(globalVar.isCurrencyFrom){
-                                print("isCurrencyFrom")
                                 convertFrom = globalVar.selectedFrom[1]
-                                print(convertFrom)
-                                print(globalVar.selectedFrom[1])
                             }
                             
                             presentationMode.wrappedValue.dismiss()
@@ -96,13 +90,13 @@ struct CurrencyPickerView: View {
                                 .padding()
                                 .foregroundColor(Color(UIColor(contrastingBlackOrWhiteColorOn:UIColor(color), isFlat:true)))
                         })
-                        .frame(minWidth: UIScreen.screenWidth/2.5)
+                        .frame(width: 240)
                         .background(color)
                         .cornerRadius(20)
                         .padding()
                         .shadow(color: Color(red: 0, green: 0, blue: 0, opacity: 0.15), radius: 6, x: 3, y: 4)
                     }
-                    .frame(width: UIScreen.screenWidth/1.2)
+                    .frame(maxWidth: UIScreen.screenWidth/1.2)
                     .background(Color.white)
                     .cornerRadius(10)
                     .padding(.vertical, 20)
