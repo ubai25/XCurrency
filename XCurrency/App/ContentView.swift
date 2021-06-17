@@ -19,11 +19,11 @@ struct ContentView: View {
     @State private var from: String = "0"
     @State private var showingAlert: Bool = false
     @State private var showingPicker: Bool = false
+    @State private var isLoadingHide: Bool = true
     @State var alertTitle: String = "Something is Wrong"
     @State var alertMessage: String = "Something is Wrong"
-    
-    var colors: [[Color]] = colorsAvailableArray.shuffled()
-    var images = currencyImages.shuffled()
+    @State var colors: [[Color]] = colorsAvailableArray.shuffled()
+    @State var images = currencyImages.shuffled()
     
     var body: some View {
         ZStack{
@@ -50,24 +50,31 @@ struct ContentView: View {
                 .clipShape(CustomShape(corner: .bottomRight, radii: 40))
                 .offset(y: -UIScreen.screenHeight/17)
 
-                Text(result)
-                    .padding(.all)
-                    .frame(maxWidth: .infinity, minHeight: UIScreen.screenHeight/10, alignment: .center)
-                    .background(Color.white)
-                    .cornerRadius(30)
-                    .padding(.horizontal, UIScreen.screenWidth/10)
-                    .offset(y: -UIScreen.screenHeight/11)
-                    .shadow(color: Color(red: 0, green: 0, blue: 0, opacity: 0.15), radius: 8, x: 6, y: 8)
-                    .font(.title)
+                ZStack{
+                    Text(result)
+                        .padding(.all)
+                        .frame(maxWidth: .infinity, minHeight: UIScreen.screenHeight/10, alignment: .center)
+                        .background(Color.white)
+                        .cornerRadius(30)
+                        .padding(.horizontal, UIScreen.screenWidth/10)
+                        .shadow(color: Color(red: 0, green: 0, blue: 0, opacity: 0.15), radius: 8, x: 6, y: 8)
+                        .font(.title)
+                    
+                    ProgressView()
+                        .scaleEffect(x: 2, y: 2, anchor: .center)
+                        .isHidden(isLoadingHide)
+                }
+                .offset(y: -UIScreen.screenHeight/11)
                 
                 Spacer()
                 
                 VStack {
                     Button(action: {
-                        globalVar.currencyFrom = false
+                        globalVar.isCurrencyTo = true
+                        globalVar.isCurrencyFrom = false
                         showingPicker = true
                     }, label: {
-                        Text(convertTo)
+                        Text(globalVar.selectedTo[1])
                     })
                     .pickerStyle(MenuPickerStyle())
                     .padding(.all)
@@ -92,10 +99,11 @@ struct ContentView: View {
                     .padding(UIScreen.screenWidth/30)
                     
                     Button(action: {
-                        globalVar.currencyFrom = true
+                        globalVar.isCurrencyFrom = true
+                        globalVar.isCurrencyTo = false
                         showingPicker = true
                     }, label: {
-                        Text(convertFrom)
+                        Text(globalVar.selectedFrom[1])
                     })
                     .pickerStyle(MenuPickerStyle())
                     .padding(.all)
@@ -121,7 +129,6 @@ struct ContentView: View {
                     .padding(.vertical, UIScreen.screenHeight/50)
                     .font(.title)
                     .keyboardType(.numberPad)
-                    
                     
                     Button(action: {
                         if let valid = Int(from) {
@@ -162,6 +169,8 @@ struct ContentView: View {
     // MARK: FUNCS
     
     func getPosts() {
+        isLoadingHide = false
+        result = ""
         
         guard let url = URL(string: "https://api.exchangerate.host/latest?base=\(convertFrom)&amount=\(from)&symbols=\(convertTo)&places=2") else { return}
         
@@ -180,6 +189,7 @@ struct ContentView: View {
                 showingAlert = true
             }
             
+            isLoadingHide = true
             print(self.result)
             
         }.resume()
@@ -219,7 +229,9 @@ extension UIScreen{
 }
 
 class GlobalVar: ObservableObject{
-    @Published var currencyFrom: Bool = true
+    @Published var isCurrencyFrom: Bool = false
+    @Published var isCurrencyTo: Bool = true
     @Published var searchCurrency: String = ""
-    @Published var selectedCurrency: [String] = currencies[0]
+    @Published var selectedFrom: [String] = currencies[0]
+    @Published var selectedTo: [String] = currencies[0]
 }

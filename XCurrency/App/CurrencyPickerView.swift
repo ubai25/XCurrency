@@ -28,31 +28,63 @@ struct CurrencyPickerView: View {
                     
                     Divider().padding(.vertical, 4)
                     
-                    Text(globalVar.selectedCurrency[0])
-                        .font(.title2)
-                        .fontWeight(.light)
-                        .frame(width: UIScreen.screenWidth/1.2, height: UIScreen.screenHeight/18)
-                        .background(Color.white)
-                        .foregroundColor(color)
-                        .cornerRadius(10)
-                        .isHidden(false)
-                    
-                    Picker("Select your Currency", selection: $globalVar.selectedCurrency) {
-                        ForEach(getCurrencies(), id: \.self) {
-                            Text($0[1])
+                    ZStack{
+                        VStack{
+                            Text(globalVar.selectedTo[0])
+                                .font(.title2)
+                                .fontWeight(.light)
+                                .frame(width: UIScreen.screenWidth/1.2, height: UIScreen.screenHeight/18)
+                                .background(Color.white)
+                                .foregroundColor(color)
+                                .cornerRadius(10)
+                            
+                            Picker("Select your Currency", selection: $globalVar.selectedTo) {
+                                ForEach(currencies, id: \.self) {
+                                    Text($0[1])
+                                }
+                            }
+                            .background(Color.white)
+                            .cornerRadius(10)
                         }
+                        .isHidden(globalVar.isCurrencyFrom)
+                        
+                        
+                        VStack {
+                            Text(globalVar.selectedFrom[0])
+                                .font(.title2)
+                                .fontWeight(.light)
+                                .frame(width: UIScreen.screenWidth/1.2, height: UIScreen.screenHeight/18)
+                                .background(Color.white)
+                                .foregroundColor(color)
+                                .cornerRadius(10)
+                            
+                            Picker("Select your Currency", selection: $globalVar.selectedFrom) {
+                                ForEach(currencies, id: \.self) {
+                                    Text($0[1])
+                                }
+                            }
+                            .background(Color.white)
+                            .cornerRadius(10)
+                        }
+                        .isHidden(globalVar.isCurrencyTo)
                     }
-                    .background(Color.white)
-                    .cornerRadius(10)
                     
                     VStack {
                         
                         Button(action: {
                             
-                            if(!globalVar.currencyFrom){
-                                convertTo = globalVar.selectedCurrency[1]
-                            }else{
-                                convertFrom = globalVar.selectedCurrency[1]
+                            if(globalVar.isCurrencyTo){
+                                print("isCurrencyTo")
+                                convertTo = globalVar.selectedTo[1]
+                                print(convertTo)
+                                print(globalVar.selectedTo[1])
+                            }
+                            
+                            if(globalVar.isCurrencyFrom){
+                                print("isCurrencyFrom")
+                                convertFrom = globalVar.selectedFrom[1]
+                                print(convertFrom)
+                                print(globalVar.selectedFrom[1])
                             }
                             
                             presentationMode.wrappedValue.dismiss()
@@ -86,23 +118,23 @@ struct CurrencyPickerView: View {
         }
     }
     
-    func getCurrencies() -> [[String]]{
-        
-        if(search.isEmpty || search == ""){
-            return currencies
-        }else {
-            let tempCurr = currencies.filter{
-                $0[0].uppercased().contains(search.uppercased()) || $0[1].contains(search.uppercased())
-            }
-            
-            if(tempCurr.count<1){
-                return [["Result Not Found", ""]]
-            }
-            
-            globalVar.selectedCurrency = tempCurr[0]
-            return tempCurr
-        }
-    }
+//    func getCurrencies() -> [[String]]{
+//
+//        if(search.isEmpty || search == ""){
+//            return currencies
+//        }else {
+//            let tempCurr = currencies.filter{
+//                $0[0].uppercased().contains(search.uppercased()) || $0[1].contains(search.uppercased())
+//            }
+//
+//            if(tempCurr.count<1){
+//                return [["Result Not Found", ""]]
+//            }
+//
+//            globalVar.selectedCurrency = tempCurr[0]
+//            return tempCurr
+//        }
+//    }
 }
 
 struct SettingsLabelView: View {
