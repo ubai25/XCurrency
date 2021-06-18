@@ -15,7 +15,6 @@ struct CurrencyPickerView: View {
     @AppStorage("convertFrom") var convertFrom: String?
     @AppStorage("convertTo") var convertTo: String?
     
-//    @State private var selectedCurrency: [String] = currencies[0]
     @State private var search: String = ""
     @State private var iSearch: Bool = false
     

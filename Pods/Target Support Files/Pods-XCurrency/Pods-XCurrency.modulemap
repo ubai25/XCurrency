@@ -1,0 +1,6 @@
+framework module Pods_XCurrency {
+  umbrella header "Pods-XCurrency-umbrella.h"
+
+  export *
+  module * { export * }
+}

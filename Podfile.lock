@@ -1,0 +1,22 @@
+PODS:
+  - ChameleonFramework (2.1.0):
+    - ChameleonFramework/Default (= 2.1.0)
+  - ChameleonFramework/Default (2.1.0)
+  - SwiftyJSON (5.0.1)
+
+DEPENDENCIES:
+  - ChameleonFramework
+  - SwiftyJSON
+
+SPEC REPOS:
+  trunk:
+    - ChameleonFramework
+    - SwiftyJSON
+
+SPEC CHECKSUMS:
+  ChameleonFramework: d21a3cc247abfe5e37609a283a8238b03575cf64
+  SwiftyJSON: 2f33a42c6fbc52764d96f13368585094bfd8aa5e
+
+PODFILE CHECKSUM: 8da1909d807998a208dcc4ba941138fa71fb6909
+
+COCOAPODS: 1.10.1
