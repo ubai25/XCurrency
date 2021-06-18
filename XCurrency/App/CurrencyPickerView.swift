@@ -24,19 +24,23 @@ struct CurrencyPickerView: View {
     var body: some View {
         NavigationView(){
             VStack {
-                GroupBox(label: SettingsLabelView(labelText: "Currencies", labelImage: "coloncurrencysign.circle", color: color)){
+                GroupBox(label:
+                            HStack {
+                                Text("Currencies".uppercased())
+                                    .fontWeight(.regular)
+                                Spacer()
+                                Image(systemName: "coloncurrencysign.circle")
+                            }
+                            .foregroundColor(color)
+                ){
                     
                     Divider().padding(.vertical, 4)
                     
                     ZStack{
                         VStack{
                             Text(globalVar.selectedTo[0])
-                                .font(.title2)
                                 .fontWeight(.light)
-                                .frame(maxWidth: UIScreen.screenWidth/1.2, minHeight: UIScreen.screenHeight/18)
-                                .background(Color.white)
-                                .foregroundColor(color)
-                                .cornerRadius(10)
+                                .currencyDescStyle(color: color)
                             
                             Picker("Select your Currency", selection: $globalVar.selectedTo) {
                                 ForEach(currencies, id: \.self) {
@@ -48,15 +52,10 @@ struct CurrencyPickerView: View {
                         }
                         .isHidden(globalVar.isCurrencyFrom)
                         
-                        
                         VStack {
                             Text(globalVar.selectedFrom[0])
-                                .font(.title2)
                                 .fontWeight(.light)
-                                .frame(maxWidth: UIScreen.screenWidth/1.2, minHeight: UIScreen.screenHeight/18)
-                                .background(Color.white)
-                                .foregroundColor(color)
-                                .cornerRadius(10)
+                                .currencyDescStyle(color: color)
                             
                             Picker("Select your Currency", selection: $globalVar.selectedFrom) {
                                 ForEach(currencies, id: \.self) {
@@ -72,29 +71,15 @@ struct CurrencyPickerView: View {
                     VStack {
                         
                         Button(action: {
-                            
-                            if(globalVar.isCurrencyTo){
-                                convertTo = globalVar.selectedTo[1]
-                            }
-                            
-                            if(globalVar.isCurrencyFrom){
-                                convertFrom = globalVar.selectedFrom[1]
-                            }
-                            
-                            presentationMode.wrappedValue.dismiss()
-                            
+                            doSelect()
                         },  label: {
                             Text("Select")
                                 .font(/*@START_MENU_TOKEN@*/.title/*@END_MENU_TOKEN@*/)
                                 .fontWeight(.light)
                                 .padding()
-                                .foregroundColor(Color(UIColor(contrastingBlackOrWhiteColorOn:UIColor(color), isFlat:true)))
+                                .foregroundColorContrast(color: color)
                         })
-                        .frame(width: 240)
-                        .background(color)
-                        .cornerRadius(20)
-                        .padding()
-                        .shadow(color: Color(red: 0, green: 0, blue: 0, opacity: 0.15), radius: 6, x: 3, y: 4)
+                        .mainButtonStyle(color: color)
                     }
                     .frame(maxWidth: UIScreen.screenWidth/1.2)
                     .background(Color.white)
@@ -110,6 +95,18 @@ struct CurrencyPickerView: View {
                 
             }
         }
+    }
+    
+    func doSelect() {
+        if(globalVar.isCurrencyTo){
+            convertTo = globalVar.selectedTo[1]
+        }
+        
+        if(globalVar.isCurrencyFrom){
+            convertFrom = globalVar.selectedFrom[1]
+        }
+        
+        presentationMode.wrappedValue.dismiss()
     }
     
 //    func getCurrencies() -> [[String]]{
@@ -130,33 +127,6 @@ struct CurrencyPickerView: View {
 //        }
 //    }
 }
-
-struct SettingsLabelView: View {
-    var labelText: String
-    var labelImage: String
-    var color: Color
-    
-    var body: some View {
-        HStack {
-            Text(labelText.uppercased())
-                .fontWeight(.regular)
-            Spacer()
-            Image(systemName: labelImage)
-        }
-        .foregroundColor(color)
-    }
-}
-
-extension View {
-    @ViewBuilder func isHidden(_ hidden: Bool) -> some View {
-        if hidden {
-            self.hidden()
-        } else {
-            self
-        }
-    }
-}
-
 
 struct CurrencyPickerView_Previews: PreviewProvider {
     static var previews: some View {

@@ -30,37 +30,11 @@ struct ContentView: View {
     var body: some View {
         ZStack{
             VStack(){
-                HStack{
-                    HStack{
-                        VStack(alignment:.leading){
-                            Text("Hi!").bold().font(.largeTitle).foregroundColor(Color(UIColor(contrastingBlackOrWhiteColorOn:UIColor(colors[0][0]), isFlat:true)))
-                            Text("Welcome To XCurrency").font(.title).foregroundColor(Color(UIColor(contrastingBlackOrWhiteColorOn:UIColor(colors[0][0]), isFlat:true)))
-                        }
-                        Spacer()
-                        
-                        Image(images[0])
-                            .resizable()
-                            .frame(width: UIScreen.screenHeight/8, height: UIScreen.screenHeight/8)
-                            .shadow(color: Color(red: 0, green: 0, blue: 0, opacity: 0.15), radius: 8, x: 6, y: 8)
-                        
-                    }
-                    .offset(y: UIScreen.screenHeight/50)
-                }
-                .frame(height: UIScreen.screenHeight/5)
-                .padding(UIScreen.screenWidth/14)
-                .background(LinearGradient(gradient: Gradient(colors: colors[0]), startPoint: .topLeading, endPoint: .bottomTrailing))
-                .clipShape(CustomShape(corner: .bottomRight, radii: 40))
-                .offset(y: -UIScreen.screenHeight/17)
+                HeaderView(colors: colors[0], image: images[0], color: colors[0][0])
 
                 ZStack{
                     Text(result)
-                        .padding(.all)
-                        .frame(maxWidth: .infinity, minHeight: UIScreen.screenHeight/10, alignment: .center)
-                        .background(Color.white)
-                        .cornerRadius(30)
-                        .padding(.horizontal, UIScreen.screenWidth/10)
-                        .shadow(color: Color(red: 0, green: 0, blue: 0, opacity: 0.15), radius: 8, x: 6, y: 8)
-                        .font(.title)
+                        .mainTextViewStyle()
                     
                     ProgressView()
                         .scaleEffect(x: 2, y: 2, anchor: .center)
@@ -72,29 +46,14 @@ struct ContentView: View {
                 
                 VStack {
                     Button(action: {
-                        globalVar.isCurrencyTo = true
-                        globalVar.isCurrencyFrom = false
-                        showingPicker = true
+                        changeCurrencyTo()
                     }, label: {
                         Text(convertTo)
                     })
-                    .pickerStyle(MenuPickerStyle())
-                    .padding(.all)
-                    .frame(minWidth: UIScreen.screenWidth/3)
-                    .background(Color.white)
-                    .cornerRadius(/*@START_MENU_TOKEN@*/20.0/*@END_MENU_TOKEN@*/)
-                    .shadow(color: Color(red: 0, green: 0, blue: 0, opacity: 0.15), radius: 6, x: 2, y: 3)
-                    .foregroundColor(colors[0][1])
-                    .font(.title)
+                    .currencySymbolButtonStyle(color: colors[0][1])
                     
                     Button(action: {
-                        let temp = convertFrom
-                        self.convertFrom = self.convertTo
-                        self.convertTo = temp
-                        
-                        let tempArr = globalVar.selectedTo
-                        globalVar.selectedTo = globalVar.selectedFrom
-                        globalVar.selectedFrom = tempArr
+                        switchCurrencies()
                         
                     }, label: {
                         Image(systemName: "repeat.circle.fill")
@@ -106,61 +65,28 @@ struct ContentView: View {
                     .padding(UIScreen.screenWidth/30)
                     
                     Button(action: {
-                        globalVar.isCurrencyFrom = true
-                        globalVar.isCurrencyTo = false
-                        showingPicker = true
+                        changeCurrencyfrom()
                     }, label: {
                         Text(convertFrom)
                     })
-                    .pickerStyle(MenuPickerStyle())
-                    .padding(.all)
-                    .frame(minWidth: UIScreen.screenWidth/3)
-                    .background(Color.white)
-                    .cornerRadius(/*@START_MENU_TOKEN@*/20.0/*@END_MENU_TOKEN@*/)
-                    .shadow(color: Color(red: 0, green: 0, blue: 0, opacity: 0.15), radius: 6, x: 2, y: 3)
-                    .foregroundColor(colors[0][1])
-                    .font(.title)
+                    .currencySymbolButtonStyle(color: colors[0][1])
                 }
                 .offset(y: -UIScreen.screenHeight/18)
                 
                 VStack{
                     TextField("Amount", text: $from)
-                    .padding(.all)
-                    .frame(maxWidth: .infinity, minHeight: UIScreen.screenHeight/10.0, alignment: .center)
-                    .background(RoundedRectangle(cornerRadius: 30)
-                                    .strokeBorder(colors[0][0], lineWidth: 0.3))
-                    .background(Color.white)
-                    .cornerRadius(30)
-                    .shadow(color: Color(red: 0, green: 0, blue: 0, opacity: 0.15), radius: 8, x: 6, y: 8)
-                    .padding(.horizontal, UIScreen.screenWidth/10)
+                    .mainTextViewStyle()
                     .padding(.vertical, UIScreen.screenHeight/50)
-                    .font(.title)
-                    .keyboardType(.numberPad)
                     
                     Button(action: {
-                        if let valid = Int(from) {
-                            if valid <= 0 {
-                                alertTitle = "Invalid Request"
-                                alertMessage = "Amount cannot less than 1"
-                                showingAlert = true
-                            }else{
-                                getPosts()
-                            }
-                        } else {
-                            alertTitle = "Invalid Request"
-                            alertMessage = "Invalid Amount"
-                            showingAlert = true
-                        }
+                        doConvert()
                     },  label: {
                         Text("Convert")
                             .font(/*@START_MENU_TOKEN@*/.title/*@END_MENU_TOKEN@*/)
-                            .foregroundColor(Color(UIColor(contrastingBlackOrWhiteColorOn:UIColor(colors[0][1]), isFlat:true)))
+                            .padding()
+                            .foregroundColorContrast(color: colors[0][1])
                     })
-                    .padding(.all)
-                    .frame(minWidth: 240)
-                    .background(colors[0][1])
-                    .cornerRadius(/*@START_MENU_TOKEN@*/20.0/*@END_MENU_TOKEN@*/)
-                    .shadow(color: Color(red: 0, green: 0, blue: 0, opacity: 0.15), radius: 6, x: 3, y: 4)
+                    .mainButtonStyle(color: colors[0][1])
                     .alert(isPresented: $showingAlert) {
                         Alert(title: Text(alertTitle), message: Text(alertMessage), dismissButton: .default(Text("Ok")))
                             }
@@ -173,7 +99,46 @@ struct ContentView: View {
         }
     } // END OF VIEW
     
-    // MARK: FUNCS
+    
+    // MARK: FUNCTIONS
+    
+    func changeCurrencyTo() {
+        globalVar.isCurrencyTo = true
+        globalVar.isCurrencyFrom = false
+        showingPicker = true
+    }
+    
+    func changeCurrencyfrom() {
+        globalVar.isCurrencyFrom = true
+        globalVar.isCurrencyTo = false
+        showingPicker = true
+    }
+    
+    func switchCurrencies() {
+        let temp = convertFrom
+        convertFrom = convertTo
+        convertTo = temp
+        
+        let tempArr = globalVar.selectedTo
+        globalVar.selectedTo = globalVar.selectedFrom
+        globalVar.selectedFrom = tempArr
+    }
+    
+    func doConvert() {
+        if let valid = Int(from) {
+            if valid <= 0 {
+                alertTitle = "Invalid Request"
+                alertMessage = "Amount cannot less than 1"
+                showingAlert = true
+            }else{
+                getPosts()
+            }
+        } else {
+            alertTitle = "Invalid Request"
+            alertMessage = "Invalid Amount"
+            showingAlert = true
+        }
+    }
     
     func getPosts() {
         isLoadingHide = false
@@ -219,12 +184,6 @@ struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
     }
-}
-
-extension UIScreen{
-   static let screenWidth = UIScreen.main.bounds.size.width
-   static let screenHeight = UIScreen.main.bounds.size.height
-   static let screenSize = UIScreen.main.bounds.size
 }
 
 class GlobalVar: ObservableObject{
