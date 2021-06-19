@@ -14,8 +14,6 @@ struct ContentView: View {
     @AppStorage("convertFrom") var convertFrom: String = "USD"
     @AppStorage("convertTo") var convertTo: String = "IDR"
     
-    @State var alertTitle: String = "Something is Wrong"
-    @State var alertMessage: String = "Something is Wrong"
     @State var colors: [[Color]] = colorsAvailableArray.shuffled()
     @State var images = currencyImages.shuffled()
     
@@ -82,7 +80,7 @@ struct ContentView: View {
                     })
                     .mainButtonStyle(color: colors[0][1])
                     .alert(isPresented: $vmModel.showingAlert) {
-                        Alert(title: Text(alertTitle), message: Text(alertMessage), dismissButton: .default(Text("Ok")))
+                        Alert(title: Text(vmModel.alertTitle), message: Text(vmModel.alertMessage), dismissButton: .default(Text("Ok")))
                             }
                 }
                 .offset(y: -UIScreen.screenHeight/25
