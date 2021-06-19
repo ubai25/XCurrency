@@ -7,19 +7,13 @@
 
 import SwiftUI
 import ChameleonFramework
-import SwiftyJSON
 
 struct ContentView: View {
-    @EnvironmentObject var globalVar: GlobalVar
+    @ObservedObject var vmModel = ContenViewModel()
     
     @AppStorage("convertFrom") var convertFrom: String = "USD"
     @AppStorage("convertTo") var convertTo: String = "IDR"
     
-    @State private var result: String = "0.00"
-    @State private var from: String = "0"
-    @State private var showingAlert: Bool = false
-    @State private var showingPicker: Bool = false
-    @State private var isLoadingHide: Bool = true
     @State var alertTitle: String = "Something is Wrong"
     @State var alertMessage: String = "Something is Wrong"
     @State var colors: [[Color]] = colorsAvailableArray.shuffled()
@@ -33,12 +27,12 @@ struct ContentView: View {
                 HeaderView(colors: colors[0], image: images[0], color: colors[0][0])
 
                 ZStack{
-                    Text(result)
+                    Text(vmModel.result)
                         .mainTextViewStyle()
                     
                     ProgressView()
                         .scaleEffect(x: 2, y: 2, anchor: .center)
-                        .isHidden(isLoadingHide)
+                        .isHidden(vmModel.isLoadingHide)
                 }
                 .offset(y: -UIScreen.screenHeight/11)
                 
@@ -46,14 +40,14 @@ struct ContentView: View {
                 
                 VStack {
                     Button(action: {
-                        changeCurrencyTo()
+                        vmModel.changeCurrencyTo()
                     }, label: {
                         Text(convertTo)
                     })
                     .currencySymbolButtonStyle(color: colors[0][1])
                     
                     Button(action: {
-                        switchCurrencies()
+                        vmModel.switchCurrencies()
                         
                     }, label: {
                         Image(systemName: "repeat.circle.fill")
@@ -65,7 +59,7 @@ struct ContentView: View {
                     .padding(UIScreen.screenWidth/30)
                     
                     Button(action: {
-                        changeCurrencyfrom()
+                        vmModel.changeCurrencyfrom()
                     }, label: {
                         Text(convertFrom)
                     })
@@ -74,12 +68,12 @@ struct ContentView: View {
                 .offset(y: -UIScreen.screenHeight/18)
                 
                 VStack{
-                    TextField("Amount", text: $from)
+                    TextField("Amount", text: $vmModel.from)
                     .mainTextViewStyle()
                     .padding(.vertical, UIScreen.screenHeight/50)
                     
                     Button(action: {
-                        doConvert()
+                        vmModel.doConvert()
                     },  label: {
                         Text("Convert")
                             .font(/*@START_MENU_TOKEN@*/.title/*@END_MENU_TOKEN@*/)
@@ -87,109 +81,21 @@ struct ContentView: View {
                             .foregroundColorContrast(color: colors[0][1])
                     })
                     .mainButtonStyle(color: colors[0][1])
-                    .alert(isPresented: $showingAlert) {
+                    .alert(isPresented: $vmModel.showingAlert) {
                         Alert(title: Text(alertTitle), message: Text(alertMessage), dismissButton: .default(Text("Ok")))
                             }
                 }
                 .offset(y: -UIScreen.screenHeight/25
             )}
         }
-        .sheet(isPresented: $showingPicker){
-            CurrencyPickerView(color: colors[0][1])
+        .sheet(isPresented: $vmModel.showingPicker){
+            CurrencyPickerView(contentViewModel: vmModel, color: colors[0][1])
         }
     } // END OF VIEW
-    
-    
-    // MARK: FUNCTIONS
-    
-    func changeCurrencyTo() {
-        globalVar.isCurrencyTo = true
-        globalVar.isCurrencyFrom = false
-        showingPicker = true
-    }
-    
-    func changeCurrencyfrom() {
-        globalVar.isCurrencyFrom = true
-        globalVar.isCurrencyTo = false
-        showingPicker = true
-    }
-    
-    func switchCurrencies() {
-        let temp = convertFrom
-        convertFrom = convertTo
-        convertTo = temp
-        
-        let tempArr = globalVar.selectedTo
-        globalVar.selectedTo = globalVar.selectedFrom
-        globalVar.selectedFrom = tempArr
-    }
-    
-    func doConvert() {
-        if let valid = Int(from) {
-            if valid <= 0 {
-                alertTitle = "Invalid Request"
-                alertMessage = "Amount cannot less than 1"
-                showingAlert = true
-            }else{
-                getPosts()
-            }
-        } else {
-            alertTitle = "Invalid Request"
-            alertMessage = "Invalid Amount"
-            showingAlert = true
-        }
-    }
-    
-    func getPosts() {
-        isLoadingHide = false
-        result = ""
-        
-        guard let url = URL(string: "https://api.exchangerate.host/latest?base=\(convertFrom)&amount=\(from)&symbols=\(convertTo)&places=2") else { return}
-        
-        print(url)
-        
-        URLSession.shared.dataTask(with: url) { (data, _, _) in
-            
-            let weatherJSON : JSON = JSON(data as Any)
-            
-            let convertResult: Double = Double("\(weatherJSON["rates"][convertTo])") ?? -10.00
-            
-            if convertResult != -10.00 {
-                self.result = "\(weatherJSON["rates"][convertTo])"
-            }else{
-                self.result = "0.00"
-                showingAlert = true
-            }
-            
-            isLoadingHide = true
-            print(self.result)
-            
-        }.resume()
-    }
-}
-
-//Custom Shape
-struct CustomShape : Shape {
-    var corner : UIRectCorner
-    var radii : CGFloat
-    
-    func path(in rect: CGRect) -> Path {
-        let path = UIBezierPath(roundedRect: rect, byRoundingCorners: corner, cornerRadii: CGSize(width: radii, height: radii))
-        
-        return Path(path.cgPath)
-    }
 }
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
     }
-}
-
-class GlobalVar: ObservableObject{
-    @Published var isCurrencyFrom: Bool = false
-    @Published var isCurrencyTo: Bool = true
-    @Published var searchCurrency: String = ""
-    @Published var selectedFrom: [String] = currencies[149]
-    @Published var selectedTo: [String] = currencies[62]
 }

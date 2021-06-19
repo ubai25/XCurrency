@@ -10,7 +10,8 @@ import ChameleonFramework
 
 struct CurrencyPickerView: View {
     @Environment(\.presentationMode) var presentationMode
-    @EnvironmentObject var globalVar: GlobalVar
+    
+    @ObservedObject var contentViewModel: ContenViewModel
     
     @AppStorage("convertFrom") var convertFrom: String?
     @AppStorage("convertTo") var convertTo: String?
@@ -37,11 +38,11 @@ struct CurrencyPickerView: View {
                     
                     ZStack{
                         VStack{
-                            Text(globalVar.selectedTo[0])
+                            Text(contentViewModel.selectedTo[0])
                                 .fontWeight(.light)
                                 .currencyDescStyle(color: color)
                             
-                            Picker("Select your Currency", selection: $globalVar.selectedTo) {
+                            Picker("Select your Currency", selection: $contentViewModel.selectedTo) {
                                 ForEach(currencies, id: \.self) {
                                     Text($0[1])
                                 }
@@ -49,14 +50,14 @@ struct CurrencyPickerView: View {
                             .background(Color.white)
                             .cornerRadius(10)
                         }
-                        .isHidden(globalVar.isCurrencyFrom)
+                        .isHidden(contentViewModel.isCurrencyFrom)
                         
                         VStack {
-                            Text(globalVar.selectedFrom[0])
+                            Text(contentViewModel.selectedFrom[0])
                                 .fontWeight(.light)
                                 .currencyDescStyle(color: color)
                             
-                            Picker("Select your Currency", selection: $globalVar.selectedFrom) {
+                            Picker("Select your Currency", selection: $contentViewModel.selectedFrom) {
                                 ForEach(currencies, id: \.self) {
                                     Text($0[1])
                                 }
@@ -64,13 +65,14 @@ struct CurrencyPickerView: View {
                             .background(Color.white)
                             .cornerRadius(10)
                         }
-                        .isHidden(globalVar.isCurrencyTo)
+                        .isHidden(contentViewModel.isCurrencyTo)
                     }
                     
                     VStack {
                         
                         Button(action: {
-                            doSelect()
+                            contentViewModel.doSelect()
+                            presentationMode.wrappedValue.dismiss()
                         },  label: {
                             Text("Select")
                                 .font(/*@START_MENU_TOKEN@*/.title/*@END_MENU_TOKEN@*/)
@@ -96,18 +98,6 @@ struct CurrencyPickerView: View {
         }
     }
     
-    func doSelect() {
-        if(globalVar.isCurrencyTo){
-            convertTo = globalVar.selectedTo[1]
-        }
-        
-        if(globalVar.isCurrencyFrom){
-            convertFrom = globalVar.selectedFrom[1]
-        }
-        
-        presentationMode.wrappedValue.dismiss()
-    }
-    
 //    func getCurrencies() -> [[String]]{
 //
 //        if(search.isEmpty || search == ""){
@@ -129,6 +119,6 @@ struct CurrencyPickerView: View {
 
 struct CurrencyPickerView_Previews: PreviewProvider {
     static var previews: some View {
-        CurrencyPickerView(color: Color(UIColor.flatPlum()))
+        CurrencyPickerView(contentViewModel: ContenViewModel(), color: Color(UIColor.flatPlum()))
     }
 }

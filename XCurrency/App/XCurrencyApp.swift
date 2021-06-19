@@ -11,14 +11,12 @@ import SwiftUI
 struct XCurrencyApp: App {
     @AppStorage("isOnBoarding") var isOnBoarding: Bool = true
     
-    @StateObject var globalVar = GlobalVar()
-    
     var body: some Scene {
         WindowGroup {
             if isOnBoarding{
                 OnBoardingView()
             }else{
-                ContentView().environmentObject(globalVar)
+                ContentView()
             }
         }
     }
