@@ -13,22 +13,20 @@ class ContenViewModel: ObservableObject{
     @AppStorage("convertTo") var convertTo = String()
     
     @Published var searchCurrency = String()
-    @Published var selectedFrom: [String] = currencies[149]
-    @Published var selectedTo: [String] = currencies[62]
     @Published var isLoadingHide = true
     @Published var showingAlert = false
-    @Published var showingPicker = false
     
     var result: String = "0.00"
     var from: String = "0"
     var alertTitle: String = "Error"
     var alertMessage: String = "Something is wrong"
-    var isCurrencyFrom: Bool = false
-    var isCurrencyTo: Bool = true
     
     func getPosts() {
         isLoadingHide = false
         result = ""
+        
+        print(" 3 \(convertFrom)")
+        print(" 3 \(convertTo)")
         
         guard let url = URL(string: "https://api.exchangerate.host/latest?base=\(convertFrom)&amount=\(from)&symbols=\(convertTo)&places=2") else { return}
         
@@ -37,6 +35,8 @@ class ContenViewModel: ObservableObject{
         URLSession.shared.dataTask(with: url) { [self] (data, resp, err) in
             
             let weatherJSON : JSON = JSON(data as Any)
+            
+            print("\(weatherJSON["rates"][convertTo])")
             
             let convertResult: Double = Double("\(weatherJSON["rates"][convertTo])") ?? -10.00
             
@@ -68,6 +68,8 @@ class ContenViewModel: ObservableObject{
                 alertMessage = "Amount cannot less than 1"
                 showingAlert = true
             }else{
+                print(" 2 \(convertFrom)")
+                print(" 2 \(convertTo)")
                 getPosts()
             }
         } else {
@@ -75,37 +77,5 @@ class ContenViewModel: ObservableObject{
             alertMessage = "Invalid Amount"
             showingAlert = true
         }
-    }
-    
-    func doSelect() {
-        if(isCurrencyTo){
-            convertTo = selectedTo[1]
-        }
-        
-        if(isCurrencyFrom){
-            convertFrom = selectedFrom[1]
-        }
-    }
-    
-    func changeCurrencyTo() {
-        isCurrencyTo = true
-        isCurrencyFrom = false
-        showingPicker = true
-    }
-    
-    func changeCurrencyfrom() {
-        isCurrencyFrom = true
-        isCurrencyTo = false
-        showingPicker = true
-    }
-    
-    func switchCurrencies() {
-        let temp = convertFrom
-        convertFrom = convertTo
-        convertTo = temp
-        
-        let tempArr = selectedTo
-        selectedTo = selectedFrom
-        selectedFrom = tempArr
     }
 }

@@ -11,13 +11,10 @@ import ChameleonFramework
 struct CurrencyPickerView: View {
     @Environment(\.presentationMode) var presentationMode
     
-    @ObservedObject var contentViewModel: ContenViewModel
+    @ObservedObject var pickerViewModel: CurrencyPickerViewModel
     
-    @AppStorage("convertFrom") var convertFrom: String?
-    @AppStorage("convertTo") var convertTo: String?
-    
-    @State private var search: String = ""
     @State private var iSearch: Bool = false
+    @State var isSearch = false
     
     var color: Color
     
@@ -38,26 +35,65 @@ struct CurrencyPickerView: View {
                     
                     ZStack{
                         VStack{
-                            Text(contentViewModel.selectedTo[0])
-                                .fontWeight(.light)
+                            ZStack{
+                                TextField("Search", text: $pickerViewModel.search)
+                                    .padding(.horizontal)
+                                    .currencyDescStyle(color: color)
+                                    .isHidden(!isSearch)
+                                
+                                Button(action: {
+                                    isSearch = true
+                                }, label: {
+                                    Text(pickerViewModel.selectedTo[0])
+                                        .fontWeight(.light)
+                                        .padding(.horizontal)
+
+                                    Spacer()
+
+                                    Image(systemName: "magnifyingglass.circle")
+                                        .padding(.horizontal, 5)
+                                })
                                 .currencyDescStyle(color: color)
+                                .isHidden(isSearch)
+                            }
                             
-                            Picker("Select your Currency", selection: $contentViewModel.selectedTo) {
-                                ForEach(currencies, id: \.self) {
+                            Picker("Select your Currency", selection: $pickerViewModel.selectedTo) {
+                                ForEach(pickerViewModel.listOfCurrency, id: \.self) {
                                     Text($0[1])
                                 }
                             }
                             .background(Color.white)
                             .cornerRadius(10)
+                            .onTapGesture {
+                                isSearch = false
+                            }
                         }
-                        .isHidden(contentViewModel.isCurrencyFrom)
+                        .isHidden(!pickerViewModel.isCurrencyTo)
                         
                         VStack {
-                            Text(contentViewModel.selectedFrom[0])
-                                .fontWeight(.light)
+                            ZStack{
+                                TextField("Search", text: $pickerViewModel.search)
+                                    .padding(.horizontal)
+                                    .currencyDescStyle(color: color)
+                                    .isHidden(!isSearch)
+                                
+                                Button(action: {
+                                    isSearch = true
+                                }, label: {
+                                    Text(pickerViewModel.selectedFrom[0])
+                                        .fontWeight(.light)
+                                        .padding(.horizontal)
+
+                                    Spacer()
+
+                                    Image(systemName: "magnifyingglass.circle")
+                                        .padding(.horizontal, 5)
+                                })
                                 .currencyDescStyle(color: color)
+                                .isHidden(isSearch)
+                            }
                             
-                            Picker("Select your Currency", selection: $contentViewModel.selectedFrom) {
+                            Picker("Select your Currency", selection: $pickerViewModel.selectedFrom) {
                                 ForEach(currencies, id: \.self) {
                                     Text($0[1])
                                 }
@@ -65,13 +101,13 @@ struct CurrencyPickerView: View {
                             .background(Color.white)
                             .cornerRadius(10)
                         }
-                        .isHidden(contentViewModel.isCurrencyTo)
+                        .isHidden(pickerViewModel.isCurrencyTo)
                     }
                     
                     VStack {
                         
                         Button(action: {
-                            contentViewModel.doSelect()
+                            pickerViewModel.doSelect()
                             presentationMode.wrappedValue.dismiss()
                         },  label: {
                             Text("Select")
@@ -87,17 +123,17 @@ struct CurrencyPickerView: View {
                     .cornerRadius(10)
                     .padding(.vertical, 20)
                 }
-                .navigationBarItems(trailing: Button(action:{
-                    presentationMode.wrappedValue.dismiss()
-                }){
-                    Image(systemName: "xmark")
-                })
+//                .background(opacity(0.3))
                 .padding()
-                
             }
+            .navigationBarItems(trailing: Button(action:{
+                presentationMode.wrappedValue.dismiss()
+            }){
+                Image(systemName: "xmark")
+            })
         }
     }
-    
+//
 //    func getCurrencies() -> [[String]]{
 //
 //        if(search.isEmpty || search == ""){
@@ -111,7 +147,10 @@ struct CurrencyPickerView: View {
 //                return [["Result Not Found", ""]]
 //            }
 //
-//            globalVar.selectedCurrency = tempCurr[0]
+////            DispatchQueue.main.async {
+////                pickerViewModel.selectedTo = tempCurr[0]
+////            }
+//
 //            return tempCurr
 //        }
 //    }
@@ -119,6 +158,6 @@ struct CurrencyPickerView: View {
 
 struct CurrencyPickerView_Previews: PreviewProvider {
     static var previews: some View {
-        CurrencyPickerView(contentViewModel: ContenViewModel(), color: Color(UIColor.flatPlum()))
+        CurrencyPickerView(pickerViewModel: CurrencyPickerViewModel(), color: Color(UIColor.flatPlum()))
     }
 }

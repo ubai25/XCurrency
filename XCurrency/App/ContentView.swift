@@ -9,13 +9,15 @@ import SwiftUI
 import ChameleonFramework
 
 struct ContentView: View {
-    @ObservedObject var vmModel = ContenViewModel()
+    @StateObject var pickerModel = CurrencyPickerViewModel()
+    @StateObject var vmModel = ContenViewModel()
     
     @AppStorage("convertFrom") var convertFrom: String = "USD"
     @AppStorage("convertTo") var convertTo: String = "IDR"
     
     @State var colors: [[Color]] = colorsAvailableArray.shuffled()
     @State var images = currencyImages.shuffled()
+    @State var showingPicker = false
     
     var test = "aha"
     
@@ -38,15 +40,15 @@ struct ContentView: View {
                 
                 VStack {
                     Button(action: {
-                        vmModel.changeCurrencyTo()
+                        pickerModel.isCurrencyTo = true
+                        showingPicker = true
                     }, label: {
                         Text(convertTo)
                     })
                     .currencySymbolButtonStyle(color: colors[0][1])
                     
                     Button(action: {
-                        vmModel.switchCurrencies()
-                        
+                        doSwitch()
                     }, label: {
                         Image(systemName: "repeat.circle.fill")
                             .resizable()
@@ -57,7 +59,8 @@ struct ContentView: View {
                     .padding(UIScreen.screenWidth/30)
                     
                     Button(action: {
-                        vmModel.changeCurrencyfrom()
+                        pickerModel.isCurrencyTo = false
+                        showingPicker = true
                     }, label: {
                         Text(convertFrom)
                     })
@@ -71,6 +74,9 @@ struct ContentView: View {
                     .padding(.vertical, UIScreen.screenHeight/50)
                     
                     Button(action: {
+                        print(" 1 \(convertFrom)")
+                        print(" 1 \(convertTo)")
+                        
                         vmModel.doConvert()
                     },  label: {
                         Text("Convert")
@@ -81,15 +87,25 @@ struct ContentView: View {
                     .mainButtonStyle(color: colors[0][1])
                     .alert(isPresented: $vmModel.showingAlert) {
                         Alert(title: Text(vmModel.alertTitle), message: Text(vmModel.alertMessage), dismissButton: .default(Text("Ok")))
-                            }
+                    }
                 }
                 .offset(y: -UIScreen.screenHeight/25
             )}
         }
-        .sheet(isPresented: $vmModel.showingPicker){
-            CurrencyPickerView(contentViewModel: vmModel, color: colors[0][1])
+        .sheet(isPresented: $showingPicker){
+            CurrencyPickerView(pickerViewModel: pickerModel, color: colors[0][1])
         }
     } // END OF VIEW
+    
+    func doSwitch() {
+        let temp = convertFrom
+        convertFrom = convertTo
+        convertTo = temp
+        
+        let tempArr = pickerModel.selectedTo
+        pickerModel.selectedTo = pickerModel.selectedFrom
+        pickerModel.selectedFrom = tempArr
+    }
 }
 
 struct ContentView_Previews: PreviewProvider {
