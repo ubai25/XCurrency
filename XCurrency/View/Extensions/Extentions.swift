@@ -24,8 +24,8 @@ extension View {
     }
     
     @ViewBuilder func currencyDescStyle(color: Color) -> some View {
-        self.font(.title2)
-            .frame(maxWidth: UIScreen.screenWidth/1.2, minHeight: UIScreen.screenHeight/18)
+        self.font(.title3)
+            .frame(minHeight: UIScreen.screenHeight/18)
             .background(Color.white)
             .foregroundColor(color)
             .cornerRadius(10)

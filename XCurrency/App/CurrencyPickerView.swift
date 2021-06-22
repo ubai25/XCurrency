@@ -13,8 +13,7 @@ struct CurrencyPickerView: View {
     
     @ObservedObject var pickerViewModel: CurrencyPickerViewModel
     
-    @State private var iSearch: Bool = false
-    @State var isSearch = false
+    @State private var isSearch: Bool = false
     
     var color: Color
     
@@ -45,14 +44,16 @@ struct CurrencyPickerView: View {
                                     isSearch = true
                                 }, label: {
                                     Text(pickerViewModel.selectedTo[0])
+                                        .font(.title3)
                                         .fontWeight(.light)
-                                        .padding(.horizontal)
+                                        .padding(.horizontal, 7)
 
                                     Spacer()
 
                                     Image(systemName: "magnifyingglass.circle")
                                         .padding(.horizontal, 5)
                                 })
+//                                .padding()
                                 .currencyDescStyle(color: color)
                                 .isHidden(isSearch)
                             }
@@ -67,6 +68,10 @@ struct CurrencyPickerView: View {
                             .onTapGesture {
                                 isSearch = false
                             }
+                            .gesture(DragGesture(minimumDistance: 0, coordinateSpace: .local)
+                                        .onEnded({ value in
+                                            isSearch = false
+                                        }))
                         }
                         .isHidden(!pickerViewModel.isCurrencyTo)
                         
@@ -82,7 +87,7 @@ struct CurrencyPickerView: View {
                                 }, label: {
                                     Text(pickerViewModel.selectedFrom[0])
                                         .fontWeight(.light)
-                                        .padding(.horizontal)
+                                        .padding(.horizontal, 7)
 
                                     Spacer()
 
@@ -94,12 +99,19 @@ struct CurrencyPickerView: View {
                             }
                             
                             Picker("Select your Currency", selection: $pickerViewModel.selectedFrom) {
-                                ForEach(currencies, id: \.self) {
+                                ForEach(pickerViewModel.listOfCurrency, id: \.self) {
                                     Text($0[1])
                                 }
                             }
                             .background(Color.white)
                             .cornerRadius(10)
+                            .onTapGesture {
+                                isSearch = false
+                            }
+                            .gesture(DragGesture(minimumDistance: 0, coordinateSpace: .local)
+                                        .onEnded({ value in
+                                            isSearch = false
+                                        }))
                         }
                         .isHidden(pickerViewModel.isCurrencyTo)
                     }
@@ -117,43 +129,24 @@ struct CurrencyPickerView: View {
                                 .foregroundColorContrast(color: color)
                         })
                         .mainButtonStyle(color: color)
+                        .disabled(pickerViewModel.isDataNotFound)
                     }
                     .frame(maxWidth: UIScreen.screenWidth/1.2)
                     .background(Color.white)
                     .cornerRadius(10)
                     .padding(.vertical, 20)
                 }
-//                .background(opacity(0.3))
+//                .background(Color.blue)
                 .padding()
             }
             .navigationBarItems(trailing: Button(action:{
+                pickerViewModel.search = ""
                 presentationMode.wrappedValue.dismiss()
             }){
                 Image(systemName: "xmark")
             })
         }
     }
-//
-//    func getCurrencies() -> [[String]]{
-//
-//        if(search.isEmpty || search == ""){
-//            return currencies
-//        }else {
-//            let tempCurr = currencies.filter{
-//                $0[0].uppercased().contains(search.uppercased()) || $0[1].contains(search.uppercased())
-//            }
-//
-//            if(tempCurr.count<1){
-//                return [["Result Not Found", ""]]
-//            }
-//
-////            DispatchQueue.main.async {
-////                pickerViewModel.selectedTo = tempCurr[0]
-////            }
-//
-//            return tempCurr
-//        }
-//    }
 }
 
 struct CurrencyPickerView_Previews: PreviewProvider {

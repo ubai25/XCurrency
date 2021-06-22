@@ -15,19 +15,22 @@ class CurrencyPickerViewModel: ObservableObject {
     @Published var selectedTo: [String] = currencies[62]
     @Published var isCurrencyTo: Bool = true
     @Published var listOfCurrency = currencies
+    @Published var isDataNotFound = false
     @Published var search: String = ""
     {
         didSet{
             DispatchQueue.main.async { [self] in
                 if(search.isEmpty || search == ""){
                     listOfCurrency = currencies
+                    isDataNotFound = false
                 }else {
                     let tempCurr = currencies.filter{
                         $0[0].uppercased().contains(search.uppercased()) || $0[1].contains(search.uppercased())
                     }
 
                     if(tempCurr.count<1){
-                        listOfCurrency = [["Result Not Found", ""]]
+                        isDataNotFound = true
+                        listOfCurrency = [["No data Found","No Data"]]
                     }else{
 
                         if(isCurrencyTo){
@@ -37,6 +40,7 @@ class CurrencyPickerViewModel: ObservableObject {
                         }
 
                         listOfCurrency = tempCurr
+                        isDataNotFound = false
                     }
                 }
             }
@@ -45,12 +49,11 @@ class CurrencyPickerViewModel: ObservableObject {
     
     func doSelect() {
         if(isCurrencyTo){
-            print(selectedTo)
             convertTo = selectedTo[1]
-            print("convertTo : \(convertTo)")
         }else{
             convertFrom = selectedFrom[1]
-            print("convertFrom : \(convertFrom)")
         }
+        
+        search = ""
     }
 }

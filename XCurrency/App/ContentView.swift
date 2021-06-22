@@ -17,7 +17,11 @@ struct ContentView: View {
     
     @State var colors: [[Color]] = colorsAvailableArray.shuffled()
     @State var images = currencyImages.shuffled()
-    @State var showingPicker = false
+    @State var showingPicker = false {
+        didSet{
+            pickerModel.search = ""
+        }
+    }
     
     var test = "aha"
     
@@ -70,13 +74,13 @@ struct ContentView: View {
                 
                 VStack{
                     TextField("Amount", text: $vmModel.from)
-                    .mainTextViewStyle()
-                    .padding(.vertical, UIScreen.screenHeight/50)
+                        .mainTextViewStyle()
+                        .padding(.vertical, UIScreen.screenHeight/50)
+                        .keyboardType(.numberPad)
                     
                     Button(action: {
-                        print(" 1 \(convertFrom)")
-                        print(" 1 \(convertTo)")
-                        
+                        convertTo = convertTo
+                        convertFrom = convertFrom
                         vmModel.doConvert()
                     },  label: {
                         Text("Convert")

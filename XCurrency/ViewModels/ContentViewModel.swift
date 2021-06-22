@@ -25,9 +25,6 @@ class ContenViewModel: ObservableObject{
         isLoadingHide = false
         result = ""
         
-        print(" 3 \(convertFrom)")
-        print(" 3 \(convertTo)")
-        
         guard let url = URL(string: "https://api.exchangerate.host/latest?base=\(convertFrom)&amount=\(from)&symbols=\(convertTo)&places=2") else { return}
         
         print(url)
@@ -56,7 +53,7 @@ class ContenViewModel: ObservableObject{
             DispatchQueue.main.async {
                 isLoadingHide = true
             }
-            print(self.result)
+//            print(self.result)
             
         }.resume()
     }
@@ -68,8 +65,6 @@ class ContenViewModel: ObservableObject{
                 alertMessage = "Amount cannot less than 1"
                 showingAlert = true
             }else{
-                print(" 2 \(convertFrom)")
-                print(" 2 \(convertTo)")
                 getPosts()
             }
         } else {

@@ -11,7 +11,6 @@
 		6A10261D267DF81F00C34D2B /* ContentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A10261C267DF81F00C34D2B /* ContentViewModel.swift */; };
 		6A1476E12677965600D12BFE /* CurrencyPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A1476E02677965600D12BFE /* CurrencyPickerView.swift */; };
 		6A19FD38267CF3E400BC8978 /* Extentions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A19FD37267CF3E400BC8978 /* Extentions.swift */; };
-		6A2A9461267F4B37000CFADF /* TextFieldAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A2A9460267F4B37000CFADF /* TextFieldAlert.swift */; };
 		6A2F7DF526726B50006F8856 /* XCurrencyApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A2F7DF426726B50006F8856 /* XCurrencyApp.swift */; };
 		6A2F7DF726726B50006F8856 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A2F7DF626726B50006F8856 /* ContentView.swift */; };
 		6A2F7DF926726B54006F8856 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6A2F7DF826726B54006F8856 /* Assets.xcassets */; };
@@ -21,7 +20,6 @@
 		6A81781D26727008000EF520 /* WelcomingCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A81781C26727008000EF520 /* WelcomingCardView.swift */; };
 		6A81781F26727A94000EF520 /* OnBoardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A81781E26727A94000EF520 /* OnBoardingView.swift */; };
 		6AFE2766267F7A8000E75AE0 /* CurrencyPickerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AFE2765267F7A8000E75AE0 /* CurrencyPickerViewModel.swift */; };
-		6AFE2768267F83FC00E75AE0 /* CurrencyPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AFE2767267F83FC00E75AE0 /* CurrencyPicker.swift */; };
 		EDEA9A8E666242C304E004C2 /* Pods_XCurrency.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2F367D126C8B09DC0D574866 /* Pods_XCurrency.framework */; };
 /* End PBXBuildFile section */
 
@@ -32,7 +30,6 @@
 		6A10261C267DF81F00C34D2B /* ContentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentViewModel.swift; sourceTree = "<group>"; };
 		6A1476E02677965600D12BFE /* CurrencyPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyPickerView.swift; sourceTree = "<group>"; };
 		6A19FD37267CF3E400BC8978 /* Extentions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extentions.swift; sourceTree = "<group>"; };
-		6A2A9460267F4B37000CFADF /* TextFieldAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldAlert.swift; sourceTree = "<group>"; };
 		6A2F7DF126726B50006F8856 /* XCurrency.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = XCurrency.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6A2F7DF426726B50006F8856 /* XCurrencyApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XCurrencyApp.swift; sourceTree = "<group>"; };
 		6A2F7DF626726B50006F8856 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -44,7 +41,6 @@
 		6A81781C26727008000EF520 /* WelcomingCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomingCardView.swift; sourceTree = "<group>"; };
 		6A81781E26727A94000EF520 /* OnBoardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnBoardingView.swift; sourceTree = "<group>"; };
 		6AFE2765267F7A8000E75AE0 /* CurrencyPickerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyPickerViewModel.swift; sourceTree = "<group>"; };
-		6AFE2767267F83FC00E75AE0 /* CurrencyPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyPicker.swift; sourceTree = "<group>"; };
 		890ED6936AC341AA5D8A3664 /* Pods-XCurrency.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-XCurrency.debug.xcconfig"; path = "Target Support Files/Pods-XCurrency/Pods-XCurrency.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -151,8 +147,6 @@
 				6A81781A26726F84000EF520 /* StartButtonView.swift */,
 				6A81781C26727008000EF520 /* WelcomingCardView.swift */,
 				6A102614267D35C600C34D2B /* HeaderView.swift */,
-				6A2A9460267F4B37000CFADF /* TextFieldAlert.swift */,
-				6AFE2767267F83FC00E75AE0 /* CurrencyPicker.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -281,10 +275,8 @@
 			files = (
 				6A2F7DF726726B50006F8856 /* ContentView.swift in Sources */,
 				6AFE2766267F7A8000E75AE0 /* CurrencyPickerViewModel.swift in Sources */,
-				6A2A9461267F4B37000CFADF /* TextFieldAlert.swift in Sources */,
 				6A102615267D35C600C34D2B /* HeaderView.swift in Sources */,
 				6A81781B26726F84000EF520 /* StartButtonView.swift in Sources */,
-				6AFE2768267F83FC00E75AE0 /* CurrencyPicker.swift in Sources */,
 				6A81781926726E93000EF520 /* Data.swift in Sources */,
 				6A10261D267DF81F00C34D2B /* ContentViewModel.swift in Sources */,
 				6A81781F26727A94000EF520 /* OnBoardingView.swift in Sources */,
