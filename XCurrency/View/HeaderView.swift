@@ -16,12 +16,16 @@ struct HeaderView: View {
         HStack{
             HStack{
                 VStack(alignment:.leading){
-                    Text("Hi!")
-                        .bold()
-                        .font(.largeTitle)
-                        .foregroundColorContrast(color: color)
-                    Text("Welcome To XCurrency")
+//                    Text("Hi!")
+//                        .bold()
+//                        .font(.largeTitle)
+//                        .foregroundColorContrast(color: color)
+                    Text("Welcome To")
                         .font(.title)
+                        .foregroundColorContrast(color: color)
+                    Text("XCurrency!")
+                        .font(.largeTitle)
+                        .bold()
                         .foregroundColorContrast(color: color)
                 }
                 Spacer()
@@ -32,7 +36,7 @@ struct HeaderView: View {
                     .shadow(color: Color(red: 0, green: 0, blue: 0, opacity: 0.15), radius: 8, x: 6, y: 8)
                 
             }
-            .offset(y: UIScreen.screenHeight/50)
+            .offset(y: UIScreen.screenHeight/45)
         }
         .frame(height: UIScreen.screenHeight/5)
         .padding(UIScreen.screenWidth/14)

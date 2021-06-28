@@ -23,8 +23,6 @@ struct ContentView: View {
         }
     }
     
-    var test = "aha"
-    
     var body: some View {
         ZStack{
             VStack(){
@@ -77,7 +75,6 @@ struct ContentView: View {
                         .mainTextViewStyle()
                         .padding(.vertical, UIScreen.screenHeight/50)
                         .keyboardType(.numberPad)
-                    
                     Button(action: {
                         convertTo = convertTo
                         convertFrom = convertFrom
@@ -98,6 +95,9 @@ struct ContentView: View {
         }
         .sheet(isPresented: $showingPicker){
             CurrencyPickerView(pickerViewModel: pickerModel, color: colors[0][1])
+        }
+        .onTapGesture {
+            hideKeyboard()
         }
     } // END OF VIEW
     

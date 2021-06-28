@@ -63,4 +63,8 @@ extension View {
             .foregroundColor(color)
             .font(.title)
     }
+    
+    func hideKeyboard() {
+        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+    }
 }
