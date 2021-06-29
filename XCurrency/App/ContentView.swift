@@ -58,6 +58,7 @@ struct ContentView: View {
                             .foregroundColor(colors[0][1])
                             .opacity(/*@START_MENU_TOKEN@*/0.8/*@END_MENU_TOKEN@*/)
                     })
+                    .shadow(color: Color.black.opacity(0.15), radius: 6, x: 4, y: 4)
                     .padding(UIScreen.screenWidth/30)
                     
                     Button(action: {

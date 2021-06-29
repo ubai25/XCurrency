@@ -28,15 +28,16 @@ struct HeaderView: View {
                         .bold()
                         .foregroundColorContrast(color: color)
                 }
+                .shadow(color: Color.black.opacity(0.15), radius: 6, x: 4, y: 4)
                 Spacer()
                 
                 Image(image)
                     .resizable()
-                    .frame(width: UIScreen.screenHeight/8, height: UIScreen.screenHeight/8)
-                    .shadow(color: Color(red: 0, green: 0, blue: 0, opacity: 0.15), radius: 8, x: 6, y: 8)
+                    .frame(width: UIScreen.screenHeight/9, height: UIScreen.screenHeight/9)
+                    .shadow(color: Color.black.opacity(0.15), radius: 8, x: 6, y: 6)
                 
             }
-            .offset(y: UIScreen.screenHeight/45)
+            .offset(y: UIScreen.screenHeight/30)
         }
         .frame(height: UIScreen.screenHeight/5)
         .padding(UIScreen.screenWidth/14)
