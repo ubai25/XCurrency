@@ -59,6 +59,10 @@ class ContenViewModel: ObservableObject{
     }
     
     func doConvert() {
+        if(from.starts(with: "0")){
+            from.remove(at: from.startIndex)
+        }
+        
         if let valid = Int(from) {
             if valid <= 0 {
                 alertTitle = "Invalid Request"
