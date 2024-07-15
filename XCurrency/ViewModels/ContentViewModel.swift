@@ -24,34 +24,35 @@ class ContenViewModel: ObservableObject{
     func getPosts() {
         isLoadingHide = false
         result = ""
-        
-        guard let url = URL(string: "https://api.exchangerate.host/latest?base=\(convertFrom)&amount=\(from)&symbols=\(convertTo)&places=2") else { return}
-        
+
+        guard let url = URL(string:"https://api.apilayer.com/exchangerates_data/convert?to=\(convertTo)&from=\(convertFrom)&amount=\(from)") else { return }
         print(url)
         
-        URLSession.shared.dataTask(with: url) { [self] (data, resp, err) in
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        request.addValue("IcvRfef8EnuCxuoUyfYdr8qAjAHM3mVL", forHTTPHeaderField: "apikey")
+        
+        URLSession.shared.dataTask(with: request){ [weak self] (data, resp, err) in
             
-            let weatherJSON : JSON = JSON(data as Any)
+            let currencyJSON : JSON = JSON(data as Any)
             
-            print("\(weatherJSON["rates"][convertTo])")
-            
-            let convertResult: Double = Double("\(weatherJSON["rates"][convertTo])") ?? -10.00
+            let convertResult: Double = Double("\(currencyJSON["result"])") ?? -10.00
             
             if convertResult != -10.00 {
                 DispatchQueue.main.async {
-                    self.result = "\(weatherJSON["rates"][convertTo])"
+                    self?.result = "\(convertResult)"
                 }
             }else{
                 DispatchQueue.main.async {
-                    self.result = "0.00"
-                    alertTitle = "Request Error"
-                    alertMessage = "Please check your internet connection"
-                    showingAlert = true
+                    self?.result = "0.00"
+                    self?.alertTitle = "Request Error"
+                    self?.alertMessage = "Please check your internet connection"
+                    self?.showingAlert = true
                 }
             }
             
             DispatchQueue.main.async {
-                isLoadingHide = true
+                self?.isLoadingHide = true
             }
 //            print(self.result)
             
